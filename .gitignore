@@ -1,3 +1,5 @@
 *
 !Makefile
 !.gitignore
+!*.md
+!*.png

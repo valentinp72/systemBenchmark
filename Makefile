@@ -23,10 +23,11 @@ install-macOS:
 	# Install only if automake and pkg-config are not installed
 	brew list automake &>/dev/null || brew install automake
 	brew list pkg-config &>/dev/null || brew install pkg-config
+	brew list python &>/dev/null || brew install python
 	make install
 
 install-debian:
-	apt -y install make automake libtool pkg-config libaio-dev vim-common
+	apt -y install python make automake libtool pkg-config libaio-dev vim-common
 	make install
 
 install:
