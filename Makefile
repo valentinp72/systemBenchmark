@@ -8,13 +8,13 @@ ifeq ($(TARGETOS), Darwin)
 	cpu_cores   = `sysctl -n hw.ncpu`    #number of cores
 	ram_o       = `sysctl -n hw.memsize` #ram size
 else
-	cpu_cores = `nproc`
-	ram_ko    = `cat /proc/meminfo | grep "MemTotal:" | grep -o '[0-9]*'`
-	ram_o     = $(shell expr $(ram_ko) * 1000 )
+	cpu_cores=`nproc`
+	ram_ko=`cat /proc/meminfo | grep "MemTotal:" | grep -o '[0-9]*'`
+	ram_o=$(shell expr $(ram_ko) \* 1000)
 endif
 
-file_min_go = $(shell expr $(ram_o) / 1000000000 ) #ram size in Go
-file_go     = $(shell expr $(file_min_go) + 2 )#we add a little more to prevent caching in ram
+file_min_go=$(shell expr $(ram_o) / 1000000000 ) #ram size in Go
+file_go=$(shell expr $(file_min_go) + 2 )#we add a little more to prevent caching in ram
 
 all:
 	@echo "Run make install-macOS, or make install-debian to install, and then, run make benchmarks"
@@ -42,10 +42,10 @@ install:
 
 benchmarks:
 	@echo "systemBenchmark - Starting benchmarks"
-	@make cpu
-	@make ram
-	@make fileIO
-	@make network
+	@make -s cpu
+	@make -s ram
+	@make -s fileIO
+	@make -s network
 
 cpu:
 	@echo -n ' > CPU  (1 core) score: '
