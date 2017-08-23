@@ -1,6 +1,6 @@
 # systemBenchmark
 
-This Makefile script install and use sysbench and speedtest-cli to perform benchmarks on Linux and macOS systems.
+This Makefile script install and use [sysbench](https://github.com/akopytov/sysbench) and [speedtest-cli](https://github.com/sivel/speedtest-cli) to perform benchmarks on Linux and macOS systems.
 
 **Example on an OVH VPS:**
 ![Example on an OVH VPS](ovh_ssd.png)
@@ -26,7 +26,7 @@ make install-debian
 make benchmarks
 ```
 
-##Credits:
+## Credits:
 
 - [Speedtest-cli](https://github.com/sivel/speedtest-cli) by [Matt Martz
 ](https://github.com/sivel)
