@@ -3,7 +3,7 @@
 This Makefile script install and use sysbench and speedtest-cli to perform benchmarks on Linux and macOS systems.
 
 **Example on an OVH VPS:**
-![Example on an OVH VPS](/Users/Valentin/git/systemBenchmark/ovh_ssd.png)
+![Example on an OVH VPS](ovh_ssd.png)
 
 ## Install:
 
