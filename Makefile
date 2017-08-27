@@ -7,10 +7,12 @@ TARGETOS := $(shell uname -s)
 ifeq ($(TARGETOS), Darwin)
 	cpu_cores   = `sysctl -n hw.ncpu`    #number of cores
 	ram_o       = `sysctl -n hw.memsize` #ram size
+	purge       = `sync && purge`   #purge disk
 else
-	cpu_cores=`nproc`
-	ram_ko=`cat /proc/meminfo | grep "MemTotal:" | grep -o '[0-9]*'`
-	ram_o=$(shell expr $(ram_ko) \* 1000)
+	cpu_cores = `nproc`
+	ram_ko    = `cat /proc/meminfo | grep "MemTotal:" | grep -o '[0-9]*'`
+	ram_o     = $(shell expr $(ram_ko) \* 1000)
+	purge     = `sync && echo 3 > /proc/sys/vm/drop_caches`
 endif
 
 file_min_go=$(shell expr $(ram_o) / 1000000000 ) #ram size in Go
@@ -60,12 +62,15 @@ cpu:
 
 ram:
 	@echo -n ' > RAM speed: '
-	@./bin_sysbench memory --memory-block-size=1M --memory-total-size=10G run | grep -o '[0-9]*\.[0-9]* MiB/sec'
+	@./bin_sysbench memory --threads=$(cpu_cores) --memory-block-size=1M --memory-total-size=10G run | grep -o '[0-9]*\.[0-9]* MiB/sec'
 
 fileIO:
-	@./bin_sysbench fileio --file-total-size=$(file_go)G prepare > /dev/null
-	@./bin_sysbench fileio --file-total-size=$(file_go)G --file-test-mode=rndrw --time=1 --max-requests=0 run | egrep 'read, MiB/s:| written, MiB/s:' | grep -o '[0-9]*\.[0-9]*' | sed 's/$$/\ MiB\/second/' | sed -e '2s/^/ > HDD Write: /' | sed -e '1s/^/ >  HDD Read: /'
-	@./bin_sysbench fileio --file-total-size=$(file_go)G cleanup > /dev/null
+	@echo -n ' > HDD Write: '
+	@sync; dd if=/dev/zero of=tempfile bs=1048576 count=1024 2>&1 >/dev/null | grep -o '[0-9]*\ \w*\/s' ; sync
+	@$(purge)
+	@echo -n ' >  HDD Read: '
+	@dd if=tempfile of=/dev/null bs=1048576 count=1024 2>&1 >/dev/null | grep -o '[0-9]*\ \w*\/s'
+
 
 
 
